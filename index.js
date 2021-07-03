@@ -7,7 +7,13 @@ function handler(contextual, parent) {
     get(target, key) {
       if (key === PARENT) return parent;
       if (key === PARENTS) {
-        if (parent) return [parent, ...parent.$parents];
+        if (parent) {
+          const grandParents = Reflect.get(parent, PARENTS);
+          if (Array.isArray(grandParents)) {
+            return [parent, ...grandParents];
+          }
+          return [parent];
+        }
         return [];
       }
       // $this means the wrapped target, not current proxy.

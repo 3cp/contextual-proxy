@@ -45,6 +45,31 @@ test('Contextual proxy has a binding and parent chain', t => {
   t.is(s.$parent.$parents.length, 0);
 });
 
+test('Contextual proxy has a binding and plain parent', t => {
+  const parent = { a: 2, c: 3 };
+  const object = { a: 1, b: false };
+
+  const s = contextualProxy(object, parent);
+  t.is(s.a, 1);
+  t.is(s.b, false);
+  t.is(s.c, 3);
+  t.is('c' in s, true);
+  t.is(s.$this.a, 1);
+  t.is(s.$this.c, undefined);
+  t.is('$this' in s, true);
+  t.is('$parent' in s, true);
+  t.is(s.$parent.a, 2);
+  t.is('a' in s.$parent, true);
+  t.is(s.$parent.b, undefined);
+  t.is('b' in s.$parent, false);
+  t.is(s.$parent.c, 3);
+  t.is('c' in s.$parent, true);
+  t.is(s.$parent.$parent, undefined);
+  t.is(s.$parents.length, 1);
+  t.is('$parents' in s, true);
+  t.is(s.$parent.$parents, undefined);
+});
+
 test('Contextual proxy has contextual variables', t => {
   const proto = { a: 1 };
   const object = Object.create(proto);
