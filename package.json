@@ -1,0 +1,39 @@
+{
+  "name": "contextual-proxy",
+  "version": "0.0.1",
+  "description": "Wrapped JS Proxy with contextual and parent context chain.",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ],
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "scripts": {
+    "test": "nyc ava",
+    "preversion": "npm test",
+    "version": "standard-changelog && git add CHANGELOG.md",
+    "postversion": "git push && git push --tags && npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/3cp/contextual-proxy.git"
+  },
+  "keywords": [
+    "proxy",
+    "binding"
+  ],
+  "author": "Chunpeng Huo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/3cp/contextual-proxy/issues"
+  },
+  "homepage": "https://github.com/3cp/contextual-proxy#readme",
+  "devDependencies": {
+    "ava": "^3.15.0",
+    "nyc": "^15.1.0",
+    "standard-changelog": "^2.0.27"
+  }
+}
