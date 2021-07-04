@@ -1,3 +1,3 @@
-export default function contextualProxy(target: any, parent?: any, context?: {
+export default function proxy(target: any, parent?: any, context?: {
   [key: string]: any;
 }): any;

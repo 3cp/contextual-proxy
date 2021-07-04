@@ -51,10 +51,10 @@ function handler(contextual, parent) {
 // and $parents.
 // There is also contextual variables like $foo and $index. By convention, all
 // contextual variable names start with "$", but this is not a hard requirement.
-function contextualProxy(
+function proxy(
   target,
   // parent can be any object,
-  // if parent is another contextual proxy (made from contextualProxy(...)),
+  // if parent is another contextual proxy (made from proxy(...)),
   // it can support the chain of contextual proxy.
   parent = undefined,
   // contextual variables.
@@ -63,5 +63,5 @@ function contextualProxy(
   return new Proxy(target, handler(contextual, parent));
 }
 
-exports.default = contextualProxy;
+exports.default = proxy;
 exports.__esModule = true;

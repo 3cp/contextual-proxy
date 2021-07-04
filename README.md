@@ -21,6 +21,17 @@ import proxy from "contextual-proxy";
 // const proxy = require("contextual-proxy").default;
 ```
 
+## API
+It exposes just one API.
+> JavaScript Proxy class can not be extended (Proxy is special because of no prototype),
+so we have to design it as a function.
+
+```ts
+export default function proxy(target: any, parent?: any, context?: {
+  [key: string]: any;
+}): any;
+```
+
 ## Create a proxy without any parent context or contextual variable
 ```js
 const obj = {a: 1, b: 2};
