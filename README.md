@@ -145,14 +145,17 @@ the proxy will create a new property on the obj or contextual variables.
 wrapped.$foo = 1;
 
 // Add a new property to original obj.
-wrapped.foo = 2; // Original obj is now {a: 1, b: 3, foo: 2}
+wrapped.foo = 2;
+// Original obj is now {a: 1, b: 3, foo: 2}
 ```
 
 ## Explicit access
 If the original object has a property `$length`, and the wrapped proxy also has a contextual variable `$length`, the original `$length` will be hidden behind the contextual variable of the same name.
 ```js
-wrapped.$length; // This will access the contextual variable.
-wrapped.$this.$length; // Use $this to explicitly access original object.
+// This will access the contextual variable.
+wrapped.$length;
+// Use $this to explicitly access original object.
+wrapped.$this.$length;
 ```
 
 > Note `$this` behaves differently from Aurelia's `$this`. In Aurelia, `$this.foo` can still access property `foo` in the parent chain. Here in contextual proxy, `$this` locks the access to just the original object, we think this is the less surprising behaviour.
@@ -160,8 +163,11 @@ wrapped.$this.$length; // Use $this to explicitly access original object.
 Same story goes for accessing the hidden property on parent chain. If both original object and parent context has same name property `foo`, you can use `$parent` to explicitly skip original object.
 
 ```js
-wrapped.foo; // This will access foo on the original object.
-wrapped.$parent.foo; // use $parent to explicitly access property on parent context (or deeper in the chain).
+// This will access foo on the original object.
+wrapped.foo;
+// use $parent to explicitly access property on
+// parent context (or deeper in the chain).
+wrapped.$parent.foo;
 ```
 
 ## License
