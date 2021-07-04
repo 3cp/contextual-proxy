@@ -8,7 +8,7 @@ Using Proxy, this is a simpler implementation of Aurelia's binding context ([Aur
 
 Not only implementation is simplified, but also the usage. Now this kind of proxy can be used as if it's a plain JavaScript object.
 
-There is no need of a full parser at runtime to execute an expression utilising this proxy, see [scoped-eval](https://github.com/3cp/scoped-eval) for more details.
+> Aurelia needs a full AST to implement a subset of JavaScript in order to execute an expression utilising binding context, because it's not transparent to access through parent context chain. With contextual proxy, it's now transparent. There is no need of an implementation of AST **at runtime** to execute an expression utilising this proxy, see [scoped-eval](https://github.com/3cp/scoped-eval) for more details.
 
 ## Import the contextual proxy
 ```
