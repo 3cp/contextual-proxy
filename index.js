@@ -20,7 +20,7 @@ function handler(contextual, parent) {
       if (key === THIS) return target;
       if (Reflect.has(contextual, key)) return Reflect.get(contextual, key);
       if (Reflect.has(target, key)) return Reflect.get(target, key);
-      if (parent) return parent[key];
+      if (parent) return Reflect.get(parent, key);
     },
     has(target, key) {
       if (key === PARENT) return !!parent;
@@ -28,7 +28,7 @@ function handler(contextual, parent) {
       // $this means the wrapped target, not current proxy.
       if (key === THIS) return !!target;
       if (Reflect.has(contextual, key) || Reflect.has(target, key)) return true;
-      if (parent) return key in parent;
+      if (parent) return Reflect.has(parent, key);
       return false;
     },
     set(target, key, value) {
@@ -37,9 +37,11 @@ function handler(contextual, parent) {
       if (key === PARENT || key === PARENTS || key === THIS) return false;
       if (Reflect.has(contextual, key)) return Reflect.set(contextual, key, value);
       if (Reflect.has(target, key)) return Reflect.set(target, key, value);
-      if (parent && Reflect.set(parent, key, value)) return true;
-      // If cannot assign to parent chain, create a local variable
+      // Create a new contextual variable, never mutate contextual variable of parent.
       if (key.startsWith("$")) return Reflect.set(contextual, key, value);
+      // Only mutate existing property in parent chain.
+      if (parent && Reflect.has(parent, key, value)) return Reflect.set(parent, key, value);
+      // Add new property to the target object.
       return Reflect.set(target, key, value);
     }
   };

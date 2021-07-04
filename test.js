@@ -2,11 +2,11 @@
 // Only strict mode will trigger TypeError on s.$parent = 1;
 
 const test = require('ava');
-const contextualProxy = require('./index.js').default;
+const proxy = require('./index.js').default;
 
 test('Contextual proxy has a binding', t => {
   const object = { a: 1, b: undefined };
-  const s = contextualProxy(object);
+  const s = proxy(object);
   t.is(s.a, 1);
   t.is('a' in s, true);
   t.is(s.b, undefined);
@@ -24,7 +24,7 @@ test('Contextual proxy has a binding and parent chain', t => {
   const parent = { a: 2, c: 3 };
   const object = { a: 1, b: false };
 
-  const s = contextualProxy(object, contextualProxy(parent));
+  const s = proxy(object, proxy(parent));
   t.is(s.a, 1);
   t.is(s.b, false);
   t.is(s.c, 3);
@@ -49,7 +49,7 @@ test('Contextual proxy has a binding and plain parent', t => {
   const parent = { a: 2, c: 3 };
   const object = { a: 1, b: false };
 
-  const s = contextualProxy(object, parent);
+  const s = proxy(object, parent);
   t.is(s.a, 1);
   t.is(s.b, false);
   t.is(s.c, 3);
@@ -75,7 +75,7 @@ test('Contextual proxy has contextual variables', t => {
   const object = Object.create(proto);
   object.b = false;
   const contextual = { $index: 3, $length: 5, b: "override" };
-  const s = contextualProxy(object, null, contextual);
+  const s = proxy(object, null, contextual);
   t.is(s.a, 1);
   t.is(s.b, "override");
   t.is(s.$this.b, false);
@@ -86,7 +86,7 @@ test('Contextual proxy has contextual variables', t => {
 
 test('Contextual proxy can assign value to target or contextual variable', t => {
   const object = { a: 1, b: false };
-  const s = contextualProxy(object);
+  const s = proxy(object);
   s.a = 2;
   t.is(s.a, 2);
   s.b = true;
@@ -105,7 +105,7 @@ test('Contextual proxy can assign value to target or contextual variable', t => 
 
 test('Contextual proxy can assign value to existing contextual key', t => {
   const object = { a: 1, b: false };
-  const s = contextualProxy(object, undefined, { b: true, $bar: 'bar' });
+  const s = proxy(object, undefined, { b: true, $bar: 'bar' });
   t.is(s.b, true);
   t.is(s.$this.b, false);
   s.b = 2;
@@ -119,9 +119,9 @@ test('Contextual proxy can assign value to parent binding', t => {
   const grandParent = { c: "c" };
   const parent = { b: false };
   const object = { a: 1 };
-  const gp = contextualProxy(grandParent);
-  const p = contextualProxy(parent, gp);
-  const s = contextualProxy(object, p);
+  const gp = proxy(grandParent);
+  const p = proxy(parent, gp);
+  const s = proxy(object, p);
   s.a = 2;
   t.is(s.a, 2);
   s.b = true;
@@ -146,7 +146,7 @@ test('Contextual proxy can assign value to parent binding', t => {
 
 test('Contextual proxy can do various assignments', t => {
   const object = { a: 1 };
-  const s = contextualProxy(object);
+  const s = proxy(object);
   s.a += 2;
   t.is(object.a, 3);
   s.a -= 1;
@@ -178,7 +178,7 @@ test('Contextual proxy can do various assignments', t => {
 // Wait for Nodejs to catch up.
 // test('Contextual proxy can do various logical assignments', t => {
 //   const object = { a: false };
-//   const s = contextualProxy(object);
+//   const s = proxy(object);
 //   s.a ||= true;
 //   t.is(object.a, true);
 //   s.a &&= false;
@@ -187,21 +187,43 @@ test('Contextual proxy can do various assignments', t => {
 
 // test('Contextual proxy can do CoalesceAssign', t => {
 //   const object = { a: 1 };
-//   const s = contextualProxy(object);
+//   const s = proxy(object);
 //   s.a ??= 2;
 //   t.is(object.a, 1);
 
 //   const object2 = { a: null };
-//   const s2 = contextualProxy(object2);
+//   const s2 = proxy(object2);
 //   s2.a ??= true;
 //   t.is(object2.a, true);
 // });
 
 test('Contextual proxy can not bind primitives', t => {
-  t.throws(() => contextualProxy(undefined));
-  t.throws(() => contextualProxy(null));
-  t.throws(() => contextualProxy(true));
-  t.throws(() => contextualProxy(NaN));
-  t.throws(() => contextualProxy("foo"));
-  t.throws(() => contextualProxy(7));
+  t.throws(() => proxy(undefined));
+  t.throws(() => proxy(null));
+  t.throws(() => proxy(true));
+  t.throws(() => proxy(NaN));
+  t.throws(() => proxy("foo"));
+  t.throws(() => proxy(7));
+});
+
+test('Contextual proxy does not mutate parent contextual variable', t => {
+  const parent = { b: false };
+  const object = { a: 1 };
+  const p = proxy(parent, {$count: 1})
+  const s = proxy(object, p);
+  s.$count = 2;
+  t.is(s.$count, 2);
+  t.is(s.$parent.$count, 1);
+
+  // parent object itself is mutable.
+  s.b = true;
+  t.is(s.b, true);
+  t.deepEqual(object, {a: 1});
+  t.deepEqual(parent, {b: true});
+
+  // Any unknown property wil be created on original object.
+  s.c = "C";
+  t.is(s.c, "C");
+  t.deepEqual(object, {a: 1, c: "C"});
+  t.deepEqual(parent, {b: true});
 });
