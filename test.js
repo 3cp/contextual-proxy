@@ -133,6 +133,8 @@ test('Contextual proxy can assign value to parent binding', t => {
   t.deepEqual(parent, { b: true });
   t.deepEqual(object, { a: 2 });
   t.is(s.$parent.c, 'C');
+  t.is(s.$parent.$this.c, undefined);
+  t.is(s.$parent.$this.b, true);
   t.is(s.$parent.$parent.c, 'C');
   t.is(s.$parent.a, undefined);
   t.is(s.$parents.length, 2);

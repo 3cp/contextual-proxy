@@ -160,6 +160,8 @@ wrapped.$this.$length;
 
 > Note `$this` behaves differently from Aurelia's `$this`. In Aurelia, `$this.foo` can still access property `foo` in the parent chain. Here in contextual proxy, `$this` locks the access to just the original object, we think this is the less surprising behaviour.
 
+> `$parent` can access the parent and deeper parent chain. To lock the access to that parent object, there is a trick: use `$this` on the parent proxy `wrapped.$parent.$this.foo`.
+
 Same story goes for accessing the hidden property on parent chain. If both original object and parent context has same name property `foo`, you can use `$parent` to explicitly skip original object.
 
 ```js
