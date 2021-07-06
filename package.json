@@ -1,6 +1,6 @@
 {
   "name": "contextual-proxy",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Wrapped JS Proxy with contextual variables and parent context chain.",
   "main": "index.js",
   "types": "index.d.ts",
