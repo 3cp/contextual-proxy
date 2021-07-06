@@ -1,3 +1,12 @@
+# [0.2.0](https://github.com/3cp/contextual-proxy/compare/v0.1.0...v0.2.0) (2021-07-06)
+
+
+### Features
+
+* add support of $contextual ([8e2b7ec](https://github.com/3cp/contextual-proxy/commit/8e2b7ecb9557ed534ebe1f556e49ac9d5cabb91a))
+
+
+
 # 0.1.0 (2021-07-06)
 
 
