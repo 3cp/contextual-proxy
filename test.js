@@ -18,6 +18,8 @@ test('Contextual proxy has a binding', t => {
   t.is('$this' in s, true);
   t.is(s.$parents.length, 0);
   t.is('$parents' in s, true);
+  t.is('$contextual' in s, true);
+  t.is(Object.keys(s.$contextual).length, 0);
 });
 
 test('Contextual proxy has a binding and parent chain', t => {
@@ -43,6 +45,8 @@ test('Contextual proxy has a binding and parent chain', t => {
   t.is(s.$parents.length, 1);
   t.is('$parents' in s, true);
   t.is(s.$parent.$parents.length, 0);
+  t.is('$contextual' in s.$parent, true);
+  t.is(Object.keys(s.$parent.$contextual).length, 0);
 });
 
 test('Contextual proxy has a binding and plain parent', t => {
@@ -68,6 +72,7 @@ test('Contextual proxy has a binding and plain parent', t => {
   t.is(s.$parents.length, 1);
   t.is('$parents' in s, true);
   t.is(s.$parent.$parents, undefined);
+  t.is('$contextual' in s.$parent, false);
 });
 
 test('Contextual proxy has contextual variables', t => {
@@ -82,6 +87,7 @@ test('Contextual proxy has contextual variables', t => {
   t.is(s.c, undefined);
   t.is(s.$index, 3);
   t.is(s.$length, 5);
+  t.deepEqual(s.$contextual, { $index: 3, $length: 5, b: "override" });
 });
 
 test('Contextual proxy can assign value to target or contextual variable', t => {
@@ -100,6 +106,7 @@ test('Contextual proxy can assign value to target or contextual variable', t => 
   t.is(s.$foo, 1);
   t.is((object).$foo, undefined);
   t.deepEqual(object, { a: 2, b: true, c: 1 });
+  t.deepEqual(s.$contextual, {$foo: 1});
   t.is(s.$parents.length, 0);
 });
 
@@ -112,6 +119,7 @@ test('Contextual proxy can assign value to existing contextual key', t => {
   t.is(s.b, 2);
   t.is(s.$this.b, false);
   t.deepEqual(object, { a: 1, b: false });
+  t.deepEqual(s.$contextual, { b: 2, $bar: 'bar' });
   t.is(s.$parents.length, 0);
 });
 

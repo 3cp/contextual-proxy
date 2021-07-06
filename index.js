@@ -1,6 +1,7 @@
 const PARENT = "$parent";
 const PARENTS = "$parents";
 const THIS = "$this";
+const CONTEXTUAL = "$contextual";
 
 function handler(contextual, parent) {
   return {
@@ -16,6 +17,7 @@ function handler(contextual, parent) {
         }
         return [];
       }
+      if (key === CONTEXTUAL) return contextual;
       // $this means the wrapped target, not current proxy.
       if (key === THIS) return target;
       if (Reflect.has(contextual, key)) return Reflect.get(contextual, key);
@@ -25,6 +27,7 @@ function handler(contextual, parent) {
     has(target, key) {
       if (key === PARENT) return !!parent;
       if (key === PARENTS) return true;
+      if (key === CONTEXTUAL) return true;
       // $this means the wrapped target, not current proxy.
       if (key === THIS) return !!target;
       if (Reflect.has(contextual, key) || Reflect.has(target, key)) return true;
@@ -32,9 +35,11 @@ function handler(contextual, parent) {
       return false;
     },
     set(target, key, value) {
-      // $parent, $parents and $this is not assignable.
+      // $parent, $parents, $this and $contextual are not assignable.
       // return TypeError in strict mode
-      if (key === PARENT || key === PARENTS || key === THIS) return false;
+      if (key === PARENT || key === PARENTS || key === THIS || key === CONTEXTUAL) {
+        return false;
+      }
       if (Reflect.has(contextual, key)) return Reflect.set(contextual, key, value);
       if (Reflect.has(target, key)) return Reflect.set(target, key, value);
       // Create a new contextual variable, never mutate contextual variable of parent.

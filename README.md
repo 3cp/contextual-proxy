@@ -172,5 +172,13 @@ wrapped.foo;
 wrapped.$parent.foo;
 ```
 
+There is also `$contextual` to lock the access to the contextual variables.
+```js
+// Only access contextual variable.
+wrapped.$contextual.$foo;
+// If parent context is also a contextual proxy.
+wrapped.$parent.$contextual.$foo;
+```
+
 ## License
 MIT.
