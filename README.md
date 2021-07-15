@@ -149,6 +149,10 @@ wrapped.foo = 2;
 // Original obj is now {a: 1, b: 3, foo: 2}
 ```
 
+## Order of property accessing
+
+To access property `foo` with `wrapped.foo`, `contextual-proxy` first checks contextual variables, then the original object itself, finally checks the parent object. If the parent object is another `contextual-proxy` wrapper, it will do the same checks and go up the chain to the next level of parent object if there is any.
+
 ## Explicit access
 If the original object has a property `$length`, and the wrapped proxy also has a contextual variable `$length`, the original `$length` will be hidden behind the contextual variable of the same name.
 ```js
