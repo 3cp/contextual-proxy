@@ -1,3 +1,7 @@
+## [0.2.2](https://github.com/3cp/contextual-proxy/compare/v0.2.1...v0.2.2) (2021-07-31)
+
+
+
 ## [0.2.1](https://github.com/3cp/contextual-proxy/compare/v0.2.0...v0.2.1) (2021-07-31)
 
 
