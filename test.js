@@ -22,7 +22,7 @@ test('Contextual proxy has a binding', t => {
   t.is(Object.keys(s.$contextual).length, 0);
 });
 
-test('Contextual proxy has a binding and parent chain', t => {
+test('Contextual proxy has a wrapped object and parent objects chain', t => {
   const parent = { a: 2, c: 3 };
   const object = { a: 1, b: false };
 
@@ -49,7 +49,7 @@ test('Contextual proxy has a binding and parent chain', t => {
   t.is(Object.keys(s.$parent.$contextual).length, 0);
 });
 
-test('Contextual proxy has a binding and plain parent', t => {
+test('Contextual proxy has a wrapped object and parent object', t => {
   const parent = { a: 2, c: 3 };
   const object = { a: 1, b: false };
 
@@ -123,7 +123,7 @@ test('Contextual proxy can assign value to existing contextual key', t => {
   t.is(s.$parents.length, 0);
 });
 
-test('Contextual proxy can assign value to parent binding', t => {
+test('Contextual proxy can assign value to parent object', t => {
   const grandParent = { c: "c" };
   const parent = { b: false };
   const object = { a: 1 };

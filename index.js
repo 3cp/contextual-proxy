@@ -54,7 +54,7 @@ function handler(contextual, parent) {
 
 // Proxy class can not be extended (Proxy is special because of no prototype),
 // so we have to use a factory method here.
-// Contextual Proxy is a proxy with access to parent context through $parent
+// Contextual Proxy is a proxy with access to parent object(s) through $parent
 // and $parents.
 // There is also contextual variables like $foo and $index. By convention, all
 // contextual variable names start with "$", but this is not a hard requirement.

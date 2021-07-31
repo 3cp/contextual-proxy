@@ -1,14 +1,20 @@
 # Contextual Proxy [![Node.js CI](https://github.com/3cp/contextual-proxy/actions/workflows/node.js.yml/badge.svg)](https://github.com/3cp/contextual-proxy/actions/workflows/node.js.yml)
 
-Wrapped JS [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) with contextual variables and parent context chain.
+An enhanced JavaScript [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) that not only wraps a JavaScript object, but also adds additional contextual variables and parent chain.
 
-Using Proxy, this is a simpler implementation of Aurelia's binding context ([Aurelia 1](https://github.com/aurelia/binding/blob/master/src/scope.js), [Aurelia 2](https://github.com/aurelia/aurelia/blob/master/packages/runtime/src/observation/binding-context.ts)).
-
-> Proxy also means IE is not supported.
+Using Proxy, this is a simpler implementation of Aurelia's scope (binding context and override context) ([Aurelia 1](https://github.com/aurelia/binding/blob/master/src/scope.js), [Aurelia 2](https://github.com/aurelia/aurelia/blob/master/packages/runtime/src/observation/binding-context.ts)).
 
 Not only implementation is simplified, but also the usage. Now this kind of proxy can be used as if it's a plain JavaScript object.
 
-> Aurelia needs a full AST to implement a subset of JavaScript in order to execute an expression utilising binding context, because it's not transparent to access through parent context chain. With contextual proxy, it's now transparent. There is no need of an implementation of AST **at runtime** to execute an expression utilising this proxy, see [scoped-eval](https://github.com/3cp/scoped-eval) for more details.
+| Contextual Proxy     | Aurelia Scope    |
+| ----------------     | -------          |
+| The proxied object   | Binding context  |
+| Contextual variables | Override context |
+| Parent object        | Parent Scope     |
+
+> Proxy also means IE is not supported.
+
+> Aurelia needs a full AST to implement a subset of JavaScript in order to execute an expression utilising scope (binding context and override context), because it's not transparent to access through parent chain. With contextual proxy, it's now transparent. There is no need of an implementation of AST **at runtime** to execute an expression utilising this proxy, see [scoped-eval](https://github.com/3cp/scoped-eval) for more details.
 
 ## Import the contextual proxy
 ```
@@ -32,7 +38,7 @@ export default function proxy(target: any, parent?: any, context?: {
 }): any;
 ```
 
-## Create a proxy without any parent context or contextual variable
+## Create a proxy without any parent object or contextual variable
 ```js
 const obj = {a: 1, b: 2};
 const wrapped = proxy(obj);
@@ -41,7 +47,7 @@ This is almost same as the plain Proxy created by `const wrapped = new Proxy(obj
 
 > Note Proxy can only wrap `object`, not primitive value (string, number, boolean) or `null` (which is an `object`).
 
-## Create a proxy with parent context
+## Create a proxy with parent object
 ```js
 const parent = {b: 1, c: 2};
 const obj = {a: 1, b: 2};
@@ -62,10 +68,10 @@ wrapped.$parent.b; // 1
 wrapped.$parent.c; // 2
 ```
 
-## Create a proxy with a chain of parent contexts
-If parent contexts are all prepared by contextual proxy, it can support chain of parent contexts.
+## Create a proxy with a chain of parent objects
+If parent contexts are all prepared by contextual proxy, it can support chain of parent objects.
 
-Use `$parent`, `$parent.$parent...` or `$parents` to access the chain of parent contexts.
+Use `$parent`, `$parent.$parent...` or `$parents` to access the chain of parent objects.
 ```js
 const grandParent = {foo: 'Foo'};
 const wrappedGP = proxy(grandParent);
@@ -136,8 +142,7 @@ wrapped.$parent.b = 2; // parent is now {b: 2, c: 3}
 wrapped.$index = 2;
 ```
 
-When you assign some variable not exists in obj, parent and contextual variables,
-the proxy will create a new property on the obj or contextual variables.
+When you assign some variable not exists in wrapped object, parent object and contextual variables, the proxy will create a new property on the object or contextual variables.
 
 ```js
 // Create contextual variable $foo with value 1.
@@ -162,11 +167,11 @@ wrapped.$length;
 wrapped.$this.$length;
 ```
 
-> Note `$this` behaves differently from Aurelia's `$this`. In Aurelia, `$this.foo` can still access property `foo` in the parent chain. Here in contextual proxy, `$this` locks the access to just the original object, we think this is the less surprising behaviour.
+> Note `$this` behaves differently from Aurelia's `$this`. In Aurelia, `$this.foo` can still access property `foo` in the parent objects chain. Here in contextual proxy, `$this` locks the access to just the original object, we think this is the less surprising behaviour.
 
-> `$parent` can access the parent and deeper parent chain. To lock the access to that parent object, there is a trick: use `$this` on the parent proxy `wrapped.$parent.$this.foo`.
+> `$parent` can access the parent object and deeper parent objects chain. To lock the access to that parent object, there is a trick: use `$this` on the parent proxy `wrapped.$parent.$this.foo`.
 
-Same story goes for accessing the hidden property on parent chain. If both original object and parent context has same name property `foo`, you can use `$parent` to explicitly skip original object.
+Same story goes for accessing the hidden property on parent objects chain. If both wrapped object and parent object has same name property `foo`, you can use `$parent` to explicitly skip original object.
 
 ```js
 // This will access foo on the original object.
