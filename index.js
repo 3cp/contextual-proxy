@@ -65,7 +65,7 @@ function proxy(
   // it can support the chain of contextual proxy.
   parent = undefined,
   // contextual variables.
-  contextual = Object.create(null),
+  contextual = {},
 ) {
   return new Proxy(target, handler(contextual, parent));
 }

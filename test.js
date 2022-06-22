@@ -1,7 +1,7 @@
 'use strict';
 // Only strict mode will trigger TypeError on s.$parent = 1;
 
-const test = require('ava');
+const {test} = require('zora');
 const proxy = require('./index.js').default;
 
 test('Contextual proxy has a binding', t => {

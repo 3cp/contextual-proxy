@@ -12,7 +12,7 @@
     "node": ">=10.0.0"
   },
   "scripts": {
-    "test": "nyc ava",
+    "test": "c8 pta",
     "preversion": "npm test",
     "version": "standard-changelog && git add CHANGELOG.md",
     "postversion": "git push && git push --tags && npm publish"
@@ -32,8 +32,9 @@
   },
   "homepage": "https://github.com/3cp/contextual-proxy#readme",
   "devDependencies": {
-    "ava": "^3.15.0",
-    "nyc": "^15.1.0",
-    "standard-changelog": "^2.0.27"
+    "c8": "^7.11.3",
+    "pta": "^1.1.0",
+    "standard-changelog": "^2.0.27",
+    "zora": "^5.0.3"
   }
 }
